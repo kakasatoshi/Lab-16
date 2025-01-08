@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/includes/Mynavbar";
 import css from "./layOut.module.css";
-// import http from "../http/useHttp";
+import Header from "../components/includes/Header";
 
 const Layout = () => {
   //   var methodString = "GET";
@@ -16,7 +16,8 @@ const Layout = () => {
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
+      <Header />
       <div className={css.layout}>
         <Outlet />
       </div>
