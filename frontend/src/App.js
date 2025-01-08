@@ -14,6 +14,8 @@ import EditProduct from "./components/admin/EditProduct";
 import Product_List from "./components/shop/Product_List";
 import Orders from "./components/shop/Orders";
 import Cart from "./components/shop/Cart";
+import Login from "./components/admin/auth/login";
+import Signup from "./components/admin/auth/signup";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +56,14 @@ const router = createBrowserRouter([
         path: "/shop/orders",
         element: <Orders />,
         // loader: authLoader,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
       },
       // Thêm các route con tại đây
     ],

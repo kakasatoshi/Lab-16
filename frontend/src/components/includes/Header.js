@@ -15,8 +15,8 @@ const Header = ({ path, isAuthenticated, csrfToken }) => {
             </li>
             <li className="main-header__item">
               <a
-                className={path === "/products" ? "active" : ""}
-                href="/products"
+                className={path === "/shop/products" ? "active" : ""}
+                href="/shop/products"
               >
                 Products
               </a>
@@ -24,14 +24,17 @@ const Header = ({ path, isAuthenticated, csrfToken }) => {
             {isAuthenticated && (
               <>
                 <li className="main-header__item">
-                  <a className={path === "/cart" ? "active" : ""} href="/cart">
+                  <a
+                    className={path === "/shop/cart" ? "active" : ""}
+                    href="/shop/cart"
+                  >
                     Cart
                   </a>
                 </li>
                 <li className="main-header__item">
                   <a
-                    className={path === "/orders" ? "active" : ""}
-                    href="/orders"
+                    className={path === "/shop/orders" ? "active" : ""}
+                    href="/shop/orders"
                   >
                     Orders
                   </a>
@@ -55,7 +58,14 @@ const Header = ({ path, isAuthenticated, csrfToken }) => {
               </>
             )}
           </ul>
-          <ul className="main-header__item-list">
+          <ul
+            className="main-header__item-list"
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginLeft: "auto",
+            }}
+          >
             {!isAuthenticated ? (
               <>
                 <li className="main-header__item">

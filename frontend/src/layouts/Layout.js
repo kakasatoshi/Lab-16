@@ -16,7 +16,7 @@ const Layout = () => {
 
   return (
     <div>
-      {/* <Navbar /> */}
+      <Navbar />
       <Header />
       <div className={css.layout}>
         <Outlet />
