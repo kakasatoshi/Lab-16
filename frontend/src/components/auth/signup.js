@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "../../css/forms.css";
 
 const SignupForm = () => {
   const [email, setEmail] = useState("");

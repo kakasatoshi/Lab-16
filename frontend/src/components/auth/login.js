@@ -1,27 +1,32 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import "../../css/forms.css";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [csrfToken, setCsrfToken] = useState(''); // Nếu cần token CSRF
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [csrfToken, setCsrfToken] = useState(""); // Nếu cần token CSRF
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await axios.post('/login', { email, password }, {
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await axios.post(
+        "/login",
+        { email, password },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
       // Xử lý thành công (redirect hoặc cập nhật UI)
-      console.log('Login successful:', response.data);
+      console.log("Login successful:", response.data);
     } catch (error) {
       // Hiển thị lỗi
       if (error.response && error.response.data.message) {
         setErrorMessage(error.response.data.message);
       } else {
-        setErrorMessage('Something went wrong!');
+        setErrorMessage("Something went wrong!");
       }
     }
   };
@@ -34,7 +39,6 @@ const LoginForm = () => {
         <link rel="stylesheet" href="/css/auth.css" />
       </head>
 
-     
       <main>
         {errorMessage && (
           <div className="user-message user-message--error">{errorMessage}</div>
@@ -62,7 +66,9 @@ const LoginForm = () => {
           </div>
           {/* Hidden CSRF Token */}
           <input type="hidden" name="_csrf" value={csrfToken} />
-          <button className="btn" type="submit">Login</button>
+          <button className="btn" type="submit">
+            Login
+          </button>
         </form>
       </main>
     </div>

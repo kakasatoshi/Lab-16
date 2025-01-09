@@ -14,8 +14,8 @@ import EditProduct from "./components/admin/EditProduct";
 import Product_List from "./components/shop/Product_List";
 import Orders from "./components/shop/Orders";
 import Cart from "./components/shop/Cart";
-import Login from "./components/admin/auth/login";
-import Signup from "./components/admin/auth/signup";
+import Login from "./components/auth/login";
+import Signup from "./components/auth/signup";
 
 const router = createBrowserRouter([
   {
