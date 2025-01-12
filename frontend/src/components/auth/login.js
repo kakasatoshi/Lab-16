@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../css/forms.css";
 
@@ -6,23 +6,41 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [csrfToken, setCsrfToken] = useState(""); // Nếu cần token CSRF
+  const [csrfToken, setCsrfToken] = useState("");
+
+  useEffect(() => {
+    // Lấy token CSRF từ meta tag hoặc API backend
+    const fetchCsrfToken = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/csrf-token", {
+          withCredentials: true,
+        });
+        setCsrfToken(response.data.csrfToken);
+      } catch (error) {
+        console.error("Failed to fetch CSRF token:", error);
+      }
+    };
+
+    fetchCsrfToken();
+  }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     try {
       const response = await axios.post(
-        "/login",
+        "http://localhost:5000/auth/login",
         { email, password },
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "CSRF-Token": csrfToken, // Thêm token vào header
+          },
+          withCredentials: true, // Gửi cookie session
         }
       );
-      // Xử lý thành công (redirect hoặc cập nhật UI)
       console.log("Login successful:", response.data);
     } catch (error) {
-      // Hiển thị lỗi
       if (error.response && error.response.data.message) {
         setErrorMessage(error.response.data.message);
       } else {
@@ -33,12 +51,6 @@ const LoginForm = () => {
 
   return (
     <div>
-      {/* Head Section */}
-      <head>
-        <link rel="stylesheet" href="/css/forms.css" />
-        <link rel="stylesheet" href="/css/auth.css" />
-      </head>
-
       <main>
         {errorMessage && (
           <div className="user-message user-message--error">{errorMessage}</div>

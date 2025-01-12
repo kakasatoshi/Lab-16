@@ -2,13 +2,20 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
+const flash = require("connect-flash");
 
 const User = require("./models/user");
-
+// const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const app = express();
+app.use(cookieParser());
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const authRoutes = require("./routes/auth");
 
 // Middleware để parse JSON (thay vì chỉ parse `urlencoded` cho React frontend)
 app.use(bodyParser.json());
@@ -16,11 +23,47 @@ app.use(bodyParser.json());
 // Middleware để phục vụ các file tĩnh, ví dụ ảnh, CSS
 app.use(express.static(path.join(__dirname, "public")));
 const cors = require("cors");
-app.use(cors());
+// app.use(cors());
+const csrfProtection = csrf({ cookie: true });
+
+const store = new MongoDBStore({
+  uri: "mongodb+srv://kakasatoshi:Mnbv%400987@product.6wlp4.mongodb.net/Product",
+  collection: "sessions", // Tên collection lưu session
+});
+
+// Xử lý lỗi khi khởi tạo store
+store.on("error", (err) => {
+  console.error("Store error:", err);
+});
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Chỉ định origin của frontend
+    methods: ["GET", "POST", "PUT", "DELETE"], // Các phương thức được phép
+    credentials: true, // Cho phép gửi cookie và header xác thực
+  })
+);
 
 // Thêm user vào request để có thể truy cập trong controller
+app.use(
+  session({
+    secret: "kaka satoshi",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
+app.use(csrfProtection);
+app.get("/csrf-token", (req, res) => {
+  res.json({ csrfToken: req.csrfToken() }); // Trả về token cho client
+});
+app.use(flash());
+
 app.use((req, res, next) => {
-  User.findById("676eb3be829015002764f5b5")
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
       next();
@@ -28,9 +71,16 @@ app.use((req, res, next) => {
     .catch((err) => console.log(err));
 });
 
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 // Routes cho API
 app.use("/admin", adminRoutes);
 app.use("/shop", shopRoutes);
+app.use("/auth", authRoutes);
 
 // Route 404 cho API không tồn tại
 app.use((req, res, next) => {

@@ -12,6 +12,11 @@ const SignupForm = () => {
   const handleSignup = async (event) => {
     event.preventDefault();
 
+    if (email === "" || password === "" || confirmPassword === "") {
+      setErrorMessage("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+
     // Kiểm tra mật khẩu xác nhận
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
@@ -20,7 +25,7 @@ const SignupForm = () => {
 
     try {
       const response = await axios.post(
-        "/signup",
+        "http://localhost:5000/auth/signup",
         { email, password, confirmPassword },
         {
           headers: { "Content-Type": "application/json" },
