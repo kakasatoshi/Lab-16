@@ -20,4 +20,8 @@
 
 # POST http://localhost:5000/shop/createOrder 
 
-GET http://localhost:5000/shop/orders
+# GET http://localhost:5000/shop/orders
+
+# GET http://localhost:5000/csrf-token
+GET http://localhost:5000/status
+

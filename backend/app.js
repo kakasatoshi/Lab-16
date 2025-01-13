@@ -54,8 +54,23 @@ app.use(
   })
 );
 app.use(csrfProtection);
-app.get("/csrf-token", (req, res) => {
+app.get("/csrf-token", (req, res, next) => {
   res.json({ csrfToken: req.csrfToken() }); // Trả về token cho client
+  next();
+});
+
+app.get("/status", (req, res, next) => {
+  if (req.session.isLoggedIn) {
+    res.status(200).json({
+      isAuthenticated: true,
+      user: req.session.user, // Trả về thông tin user nếu cần
+    });
+  } else {
+    res.status(200).json({
+      isAuthenticated: false,
+    });
+  }
+  next();
 });
 app.use(flash());
 

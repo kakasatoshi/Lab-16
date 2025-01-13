@@ -29,6 +29,20 @@ exports.getSignup = (req, res, next) => {
   });
 };
 
+exports.getStatus = (req, res, next) => {
+  // Kiểm tra nếu session chứa thông tin user
+  if (req.session.isLoggedIn) {
+    res.status(200).json({
+      isAuthenticated: true,
+      user: req.session.user, // Trả về thông tin user nếu cần
+    });
+  } else {
+    res.status(200).json({
+      isAuthenticated: false,
+    });
+  }
+};
+
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
