@@ -46,6 +46,7 @@ exports.getStatus = (req, res, next) => {
 exports.postLogin = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
+  console.log(email, password, "postLogin");
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {

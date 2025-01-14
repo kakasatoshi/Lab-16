@@ -25,7 +25,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Main />,
-        // loader: authLoader,
       },
       {
         path: "/admin/AddProduct",

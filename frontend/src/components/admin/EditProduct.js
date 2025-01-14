@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../../css/forms.css";
 import useHttp from "../../http/useHttp";
@@ -16,6 +16,7 @@ function EditProduct() {
   const [description, setDescription] = useState(
     editing ? product.description : ""
   );
+  const [csrfToken, setCsrfToken] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +38,7 @@ function EditProduct() {
     const requestConfig = {
       url,
       method: editing ? "POST" : "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
       body: payload,
     };
 
@@ -48,6 +49,15 @@ function EditProduct() {
       console.error("Error submitting form", error);
     }
   };
+
+  useEffect(() => {
+    fetch("http://localhost:5000/csrf-token", { credentials: "include" })
+      .then((response) => response.json())
+      .then((data) => {
+        setCsrfToken(data.csrfToken); // Lưu token trong state
+      })
+      .catch((error) => console.error("CSRF token fetch error:", error));
+  }, []);
 
   return (
     <main>

@@ -40,6 +40,8 @@ const LoginForm = () => {
         }
       );
       console.log("Login successful:", response.data);
+      alert("Login successful");
+      window.location.href = "/";
     } catch (error) {
       if (error.response && error.response.data.message) {
         setErrorMessage(error.response.data.message);

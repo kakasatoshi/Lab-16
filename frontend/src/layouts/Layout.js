@@ -60,7 +60,7 @@ const Layout = () => {
         csrfToken={csrfToken} // Token CSRF
       />
       <div className={css.layout}>
-        <Outlet />
+        <Outlet csrfToken={csrfToken} />
       </div>
 
       <footer>Footer</footer>

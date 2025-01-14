@@ -7,11 +7,22 @@ const ProductList = () => {
   const navigate = useNavigate();
   const { isLoading, error, sendRequest } = useHttp();
   const [products, setProducts] = useState([]);
+  const [csrfToken, setCsrfToken] = useState();
+
   const applyData = (data) => {
     // Xử lý dữ liệu từ API
     setProducts(data.products);
     // console.log(data); // Hoặc cập nhật state hoặc render dữ liệu vào giao diện
   };
+
+  useEffect(() => {
+    fetch("http://localhost:5000/csrf-token", { credentials: "include" })
+      .then((response) => response.json())
+      .then((data) => {
+        setCsrfToken(data.csrfToken); // Lưu token trong state
+      })
+      .catch((error) => console.error("CSRF token fetch error:", error));
+  }, []);
 
   useEffect(() => {
     const requestConfig = {
@@ -28,6 +39,7 @@ const ProductList = () => {
   if (error) {
     return <p>{error}</p>;
   }
+
   const deleteProductHandler = async (productId) => {
     const url = "http://localhost:5000/admin/delete-product";
     const payload = {
@@ -37,7 +49,11 @@ const ProductList = () => {
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "CSRF-Token": csrfToken,
+        },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
       if (response.ok) navigate("/admin/ProductList"); // Redirect to product list

@@ -1,6 +1,27 @@
 import React from "react";
 
 const Header = ({ path, isAuthenticated, csrfToken }) => {
+  const handleLogout = (event) => {
+    event.preventDefault();
+    fetch("http://localhost:5000/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "CSRF-Token": csrfToken, // Token lấy từ /csrf-token
+      },
+      credentials: "include", // Để gửi cookie cùng với yêu cầu
+    })
+      .then((response) => {
+        if (response.ok) {
+          // Chuyển hướng hoặc cập nhật trạng thái sau khi logout thành công
+          window.location.href = "/";
+        } else {
+          console.error("Logout failed");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
   return (
     <>
       <div className="backdrop"></div>
@@ -41,16 +62,16 @@ const Header = ({ path, isAuthenticated, csrfToken }) => {
                 </li>
                 <li className="main-header__item">
                   <a
-                    className={path === "/admin/add-product" ? "active" : ""}
-                    href="/admin/add-product"
+                    className={path === "/admin/AddProduct" ? "active" : ""}
+                    href="/admin/AddProduct"
                   >
                     Add Product
                   </a>
                 </li>
                 <li className="main-header__item">
                   <a
-                    className={path === "/admin/products" ? "active" : ""}
-                    href="/admin/products"
+                    className={path === "/admin/ProductList" ? "active" : ""}
+                    href="/admin/ProductList"
                   >
                     Admin Products
                   </a>
@@ -87,7 +108,7 @@ const Header = ({ path, isAuthenticated, csrfToken }) => {
               </>
             ) : (
               <li className="main-header__item">
-                <form action="/logout" method="post">
+                <form onSubmit={handleLogout}>
                   <input type="hidden" name="_csrf" value={csrfToken} />
                   <button type="submit">Logout</button>
                 </form>
@@ -163,7 +184,7 @@ const Header = ({ path, isAuthenticated, csrfToken }) => {
             </>
           ) : (
             <li className="mobile-nav__item">
-              <form action="/logout" method="post">
+              <form onSubmit={handleLogout}>
                 <input type="hidden" name="_csrf" value={csrfToken} />
                 <button type="submit">Logout</button>
               </form>

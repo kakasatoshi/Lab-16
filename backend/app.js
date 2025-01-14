@@ -98,9 +98,10 @@ app.use("/shop", shopRoutes);
 app.use("/auth", authRoutes);
 
 // Route 404 cho API không tồn tại
-app.use((req, res, next) => {
-  res.status(404).json({ message: "Route not found" });
-});
+// app.use((req, res, next) => {
+//   res.status(404).json({ message: "Route not found" });
+//   next();
+// });
 
 // Kết nối MongoDB và khởi chạy server
 mongoose
