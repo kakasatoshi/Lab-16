@@ -3,12 +3,17 @@ import useHttp from "../../http/useHttp";
 import useCarts from "../../http/useCart";
 import { useNavigate } from "react-router-dom";
 import "../../css/cart.css";
+import axios from "axios";
+import useCsrfToken from "../../http/useCsrfToken";
 
 const Cart = () => {
   const navigate = useNavigate();
   const { isLoading, error, sendRequest } = useHttp();
   const [carts, setCarts] = useState([]);
   const [show, setShow] = useState(false);
+  const { csrfToken, error2 } = useCsrfToken(
+    "http://localhost:5000/csrf-token"
+  );
 
   const applyData = (data) => {
     console.log(data);
@@ -31,7 +36,7 @@ const Cart = () => {
     const requestConfig = {
       url: "http://localhost:5000/shop/cartDeleteItem",
       method: "POST", // Hoặc "DELETE" nếu backend hỗ trợ
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
       body: { productId: productId }, // Truyền productId đúng format
     };
 

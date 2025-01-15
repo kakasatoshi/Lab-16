@@ -1,28 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../css/forms.css";
+import useCsrfToken from "../../http/useCsrfToken";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [csrfToken, setCsrfToken] = useState("");
-
-  useEffect(() => {
-    // Lấy token CSRF từ meta tag hoặc API backend
-    const fetchCsrfToken = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/csrf-token", {
-          withCredentials: true,
-        });
-        setCsrfToken(response.data.csrfToken);
-      } catch (error) {
-        console.error("Failed to fetch CSRF token:", error);
-      }
-    };
-
-    fetchCsrfToken();
-  }, []);
+  const { csrfToken, error } = useCsrfToken("http://localhost:5000/csrf-token");
 
   const handleLogin = async (event) => {
     event.preventDefault();

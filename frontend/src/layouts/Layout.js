@@ -10,26 +10,11 @@ import {
   useLocation,
 } from "react-router-dom";
 import axios from "axios";
+import useCsrfToken from "../http/useCsrfToken";
 
 const Layout = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [csrfToken, setCsrfToken] = useState("");
-
-  // Lấy token CSRF từ backend khi tải ứng dụng
-  useEffect(() => {
-    const fetchCsrfToken = async () => {
-      try {
-        const response = await axios.get("http://localhost:5000/csrf-token", {
-          withCredentials: true,
-        });
-        setCsrfToken(response.data.csrfToken);
-      } catch (error) {
-        console.error("Failed to fetch CSRF token:", error);
-      }
-    };
-
-    fetchCsrfToken();
-  }, []);
+  const { csrfToken, error } = useCsrfToken("http://localhost:5000/csrf-token");
 
   // Xác định trạng thái đăng nhập (giả định lấy từ API hoặc context)
   useEffect(() => {

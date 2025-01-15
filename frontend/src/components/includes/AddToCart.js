@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import useHttp from "../../http/useHttp";
-import '../../css/addtocart.css';
-
+import "../../css/addtocart.css";
+import useCsrfToken from "../../http/useCsrfToken";
 
 const AddToCart = ({ id }) => {
   // console.log("Product ID:", id);
   const [productId, setProductId] = useState(id);
   // console.log("Add to Cart:", productId);
   const { isLoading: loading, error: err, sendRequest } = useHttp();
+  const { csrfToken, error2 } = useCsrfToken(
+    "http://localhost:5000/csrf-token"
+  );
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -21,7 +24,7 @@ const AddToCart = ({ id }) => {
     const requestConfig = {
       url,
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "CSRF-Token": csrfToken },
       body: payload,
     };
 

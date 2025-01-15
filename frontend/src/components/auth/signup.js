@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../../css/forms.css";
+import useCsrfToken from "../../http/useCsrfToken";
 
 const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [csrfToken, setCsrfToken] = useState(""); // Nếu cần CSRF token
+  const { csrfToken, error } = useCsrfToken("http://localhost:5000/csrf-token"); // Nếu cần CSRF token
 
   const handleSignup = async (event) => {
     event.preventDefault();
